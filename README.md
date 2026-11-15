@@ -14,11 +14,11 @@ Die Anwendung soll Kunden, Aufträge und Termine
 
 ## Geplante Funktionen
 
-* \[ ] Kundenverwaltung
-* \[ ] Auftragsverwaltung
-* \[ ] Auftragsstatus verwalten
-* \[ ] Terminverwaltung
-* \[ ] Dashboard mit Kennzahlen
+* [ ] Kundenverwaltung
+* [ ] Auftragsverwaltung
+* [ ] Auftragsstatus verwalten
+* [ ] Terminverwaltung
+* [ ] Dashboard mit Kennzahlen
 
 
 
