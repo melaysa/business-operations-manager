@@ -36,7 +36,7 @@ Die Anwendung soll Kunden, Aufträge und Termine
 ## Projektstatus
 
 Planung – noch keine Funktionen implementiert.
-
+Projektstruktur angelegt – noch keine Funktionen implementiert
 
 
 ## Entwicklungsziel
