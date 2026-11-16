@@ -7,6 +7,9 @@ from database import (
     add_customer,
     update_customer,
     delete_customer,
+    get_orders,
+    add_order,
+    update_order_status
 )
 
 app = Flask(__name__)
@@ -57,10 +60,41 @@ def kunden_bearbeiten(customer_id):
 
 @app.route("/kunden/<int:customer_id>/loeschen", methods=["POST"])
 def kunden_loeschen(customer_id):
-    delete_customer(customer_id)
+    if not delete_customer(customer_id):
+        return "Dieser Kunde hat noch Aufträge und kann nicht gelöscht werden.", 409
+
     return redirect(url_for("kunden_uebersicht"))
 
+@app.route("/auftraege", methods=["GET", "POST"])
+def auftrags_uebersicht():
+    kunden_liste = get_customers()
 
+    if request.method == "POST":
+        bezeichnung = request.form.get("bezeichnung", "").strip()
+        kunde_id = request.form.get("kunde_id", type=int)
+
+        if bezeichnung and kunde_id is not None:
+            add_order(kunde_id, bezeichnung)
+
+        return redirect(url_for("auftrags_uebersicht"))
+
+    auftrags_liste = get_orders()
+    return render_template(
+        "auftraege.html",
+        auftraege=auftrags_liste,
+        kunden=kunden_liste,
+    )
+    
+@app.route("/auftraege/<int:order_id>/status", methods=["POST"])
+def auftrag_status_aendern(order_id):
+    status = request.form.get("status", "")
+    erlaubte_status = ("Offen", "In Bearbeitung", "Abgeschlossen")
+
+    if status in erlaubte_status:
+        update_order_status(order_id, status)
+
+    return redirect(url_for("auftrags_uebersicht"))
+    
 if __name__ == "__main__":
     create_tables()
     app.run(debug=True)

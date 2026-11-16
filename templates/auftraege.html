@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block titel %}Aufträge | Business Operations Manager{% endblock %}
+
+{% block inhalt %}
+<h1>Aufträge</h1>
+
+{% if kunden %}
+<form method="post">
+    <label for="bezeichnung">Auftragsbezeichnung</label>
+    <input id="bezeichnung" name="bezeichnung" required>
+
+    <label for="kunde_id">Kunde</label>
+    <select id="kunde_id" name="kunde_id" required>
+        {% for kunde in kunden %}
+        <option value="{{ kunde.id }}">{{ kunde.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Auftrag speichern</button>
+</form>
+{% else %}
+<p>Lege zuerst einen Kunden an.</p>
+{% endif %}
+
+<ul>
+    {% for auftrag in auftraege %}
+    <li>
+        {{ auftrag.bezeichnung }} – {{ auftrag.kundenname }}
+        – Status: {{ auftrag.status }}
+        <form
+    action="{{ url_for('auftrag_status_aendern', order_id=auftrag.id) }}"
+    method="post"
+>
+    <select name="status">
+        {% for status in ["Offen", "In Bearbeitung", "Abgeschlossen"] %}
+        <option value="{{ status }}" {% if auftrag.status == status %}selected{% endif %}>
+            {{ status }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Status speichern</button>
+</form>
+    </li>
+    {% else %}
+    <li>Noch keine Aufträge vorhanden.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
