@@ -1,4 +1,3 @@
-# pyrefly: ignore [missing-import]
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -10,5 +9,12 @@ def startseite():
     untertitel="Meine erste Flask-Seite."
 )
 
+@app.route("/status")
+def statusseite():
+    return render_template(
+    "status.html",
+        untertitel="Die Anwendung läuft."
+    )
+    
 if __name__ == "__main__":
     app.run(debug=True)
