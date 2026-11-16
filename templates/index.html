@@ -1,13 +1,6 @@
-<!doctype html>
-<html lang="de">
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Business Operations Manager</title>
-</head>
-<body>
-    <h1>Business Operations Manager</h1>
-    <p>{{ untertitel }}</p>
-    <a href="{{ url_for('statusseite') }}">Statusseite öffnen</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block titel %}Startseite | Business Operations Manager{% endblock %}
+{% block inhalt %}
+<h1>Business Operations Manager</h1>
+<p>{{ untertitel }}</p>
+{% endblock %}
