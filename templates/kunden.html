@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block titel %}Kunden | Business Operations Manager{% endblock %}
+
+{% block inhalt %}
+<h1>Kundenübersicht</h1>
+
+<form method="post">
+    <label for="name">Firmenname</label>
+    <input id="name" name="name" required>
+
+    <label for="ansprechperson">Ansprechperson</label>
+    <input id="ansprechperson" name="ansprechperson" required>
+
+    <button type="submit">Kunden speichern</button>
+</form>
+
+<ul>
+    {% for kunde in kunden %}
+    <li>
+    {{ kunde.name }} – Ansprechpartner: {{ kunde.ansprechperson }}
+    <a href="{{ url_for('kunden_bearbeiten', customer_id=kunde.id) }}">Bearbeiten</a>
+    <form
+    action="{{ url_for('kunden_loeschen', customer_id=kunde.id) }}"
+    method="post"
+    onsubmit="return confirm('Diesen Kunden wirklich löschen?');">
+    <button type="submit">Löschen</button>
+</form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

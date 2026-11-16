@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block titel %}Kunde bearbeiten | Business Operations Manager{% endblock %}
+
+{% block inhalt %}
+<h1>Kunde bearbeiten</h1>
+
+<form method="post">
+    <label for="name">Firmenname</label>
+    <input id="name" name="name" value="{{ kunde.name }}" required>
+
+    <label for="ansprechperson">Ansprechperson</label>
+    <input
+        id="ansprechperson"
+        name="ansprechperson"
+        value="{{ kunde.ansprechperson }}"
+        required
+    >
+
+    <button type="submit">Änderungen speichern</button>
+</form>
+
+<a href="{{ url_for('kunden_uebersicht') }}">Abbrechen</a>
+{% endblock %}
