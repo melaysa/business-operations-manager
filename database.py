@@ -28,6 +28,18 @@ def create_tables():
         """
     )
 
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS termine (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            auftrag_id INTEGER NOT NULL,
+            datum_uhrzeit TEXT NOT NULL,
+            notiz TEXT NOT NULL,
+            FOREIGN KEY (auftrag_id) REFERENCES auftraege(id)
+        )
+        """
+    )
+
     anzahl = connection.execute("SELECT COUNT(*) FROM kunden").fetchone()[0]
     if anzahl == 0:
         connection.executemany(
@@ -111,6 +123,40 @@ def update_order_status(order_id, status):
         (status, order_id),
     )
 
+    connection.commit()
+    connection.close()
+
+
+def get_appointments():
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.row_factory = sqlite3.Row
+
+    appointments = connection.execute(
+        """
+        SELECT termine.id, termine.datum_uhrzeit, termine.notiz,
+               auftraege.bezeichnung AS auftragsname,
+               kunden.name AS kundenname
+        FROM termine
+        JOIN auftraege ON termine.auftrag_id = auftraege.id
+        JOIN kunden ON auftraege.kunde_id = kunden.id
+        ORDER BY termine.datum_uhrzeit
+        """
+    ).fetchall()
+
+    connection.close()
+    return appointments
+
+
+def add_appointment(auftrag_id, datum_uhrzeit, notiz):
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.execute("PRAGMA foreign_keys = ON")
+    connection.execute(
+        """
+        INSERT INTO termine (auftrag_id, datum_uhrzeit, notiz)
+        VALUES (?, ?, ?)
+        """,
+        (auftrag_id, datum_uhrzeit, notiz),
+    )
     connection.commit()
     connection.close()
     

@@ -9,7 +9,9 @@ from database import (
     delete_customer,
     get_orders,
     add_order,
-    update_order_status
+    update_order_status,
+    get_appointments,
+    add_appointment,
 )
 
 app = Flask(__name__)
@@ -65,6 +67,7 @@ def kunden_loeschen(customer_id):
 
     return redirect(url_for("kunden_uebersicht"))
 
+
 @app.route("/auftraege", methods=["GET", "POST"])
 def auftrags_uebersicht():
     kunden_liste = get_customers()
@@ -84,7 +87,8 @@ def auftrags_uebersicht():
         auftraege=auftrags_liste,
         kunden=kunden_liste,
     )
-    
+
+
 @app.route("/auftraege/<int:order_id>/status", methods=["POST"])
 def auftrag_status_aendern(order_id):
     status = request.form.get("status", "")
@@ -94,7 +98,27 @@ def auftrag_status_aendern(order_id):
         update_order_status(order_id, status)
 
     return redirect(url_for("auftrags_uebersicht"))
-    
+
+
+@app.route("/termine", methods=["GET", "POST"])
+def termin_uebersicht():
+    if request.method == "POST":
+        auftrag_id = request.form.get("auftrag_id", type=int)
+        datum_uhrzeit = request.form.get("datum_uhrzeit", "").strip()
+        notiz = request.form.get("notiz", "").strip()
+
+        if auftrag_id is not None and datum_uhrzeit and notiz:
+            add_appointment(auftrag_id, datum_uhrzeit, notiz)
+
+        return redirect(url_for("termin_uebersicht"))
+
+    return render_template(
+        "termine.html",
+        termine=get_appointments(),
+        auftraege=get_orders(),
+    )
+
+
 if __name__ == "__main__":
     create_tables()
     app.run(debug=True)

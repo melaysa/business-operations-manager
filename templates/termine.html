@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block titel %}Termine | Business Operations Manager{% endblock %}
+
+{% block inhalt %}
+<h1>Terminübersicht</h1>
+
+{% if auftraege %}
+<form method="post">
+    <label for="auftrag_id">Auftrag</label>
+    <select id="auftrag_id" name="auftrag_id" required>
+        {% for auftrag in auftraege %}
+        <option value="{{ auftrag.id }}">{{ auftrag.bezeichnung }} – {{ auftrag.kundenname }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="datum_uhrzeit">Datum und Uhrzeit</label>
+    <input id="datum_uhrzeit" name="datum_uhrzeit" type="datetime-local" required>
+
+    <label for="notiz">Notiz</label>
+    <input id="notiz" name="notiz" required>
+
+    <button type="submit">Termin speichern</button>
+</form>
+{% else %}
+<p>Lege zuerst einen Auftrag an, um einen Termin zu planen.</p>
+{% endif %}
+
+<ul>
+    {% for termin in termine %}
+    <li>
+        {{ termin.datum_uhrzeit|replace('T', ' um ') }} – {{ termin.notiz }}
+        <br>Auftrag: {{ termin.auftragsname }} – Kunde: {{ termin.kundenname }}
+    </li>
+    {% else %}
+    <li>Noch keine Termine vorhanden.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
